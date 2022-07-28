@@ -14,5 +14,7 @@
 */
 
 $router->get('/', function () use ($router) {
-    return $router->app->version();
+    return response([
+        'id' => 1,
+    ]);
 });
