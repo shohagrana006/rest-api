@@ -1,4 +1,5 @@
 /vendor
+docroot/vendor
 /.idea
 Homestead.json
 Homestead.yaml
