@@ -14,8 +14,16 @@
 */
 
 $router->group(['prefix'=>'api/v1'], function() use ($router) {
-    $router->get('/users', 'UserController@index');
+
+    $router->post('/login', 'UserController@authincate');
     $router->post('/users', 'UserController@create');
+    $router->group(['middleware'=> 'auth:api'], function() use ($router){
+        $router->get('/users', 'UserController@index');
+        $router->post('/me', 'UserController@me');
+        $router->post('/logout', 'UserController@logout');
+
+    });
+    
 });
 
 

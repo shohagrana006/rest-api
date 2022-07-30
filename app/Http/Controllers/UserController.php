@@ -62,4 +62,61 @@ class UserController extends Controller
         ], 403);
       }
     }
+
+    public function authincate(Request $request){
+        try {
+            $this->validate($request, [               
+                'email'    => 'required|email',
+                'password' => 'required|min:6',
+            ]);
+        } 
+        catch (ValidationException $e) {
+                return response()->json([
+                    'success' => false,
+                    'message' =>  $e->getMessage()
+                ],422);  
+        }
+
+        $token = app('auth')->attempt($request->only('email','password'));
+
+        if($token){
+            return response()->json([
+                'success' => true,
+                'message' =>  "user login successfully",
+                'token'   => $token
+            ],200);  
+        }
+        
+        return response()->json([
+            'success' => false,
+            'message' =>  "invalid Credential",
+        ], 401);        
+    }
+
+    public function me(){
+        $user = app('auth')->user();
+        if($user){
+            return response()->json([
+                'success' => true,
+                'message' =>  "user found.",
+                'user'    => $user
+            ], 200); 
+        }
+        return response()->json([
+            'success' => false,
+            'message' =>  "user not found.",
+        ], 401); 
+    }
+
+    public function logout(){
+        $logout = app('auth')->logout();
+
+        if($logout == null){
+            return response()->json([
+                'success' => true,
+                'message' =>  "Logout successfully",
+            ], 200); 
+        }  
+    }
+
 }
